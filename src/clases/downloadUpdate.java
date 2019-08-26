@@ -139,25 +139,27 @@ public class downloadUpdate extends Thread
                             
                             System.out.println("Borrando archivos");
                             
-                            File carpeta = new File("C:\\Program Files (x86)\\GamersStore");
-                            File[] archivos = carpeta.listFiles();
-                            
-                            for (int i=0; i< archivos.length; i++)
+                            if(false)
                             {
-                                File archivo = archivos[i];
-                                if(archivo.isDirectory())
+                                File carpeta = new File("C:\\Program Files (x86)\\GamersStore");
+                                File[] archivos = carpeta.listFiles();
+
+                                for (int i=0; i< archivos.length; i++)
                                 {
-                                    if(!archivo.getName().equals("lib"))
+                                    File archivo = archivos[i];
+                                    if(archivo.isDirectory())
+                                    {
+                                        if(!archivo.getName().equals("lib"))
+                                        {
+                                            archivo.delete();
+                                        }
+                                    }
+                                    else
                                     {
                                         archivo.delete();
                                     }
                                 }
-                                else
-                                {
-                                    archivo.delete();
-                                }
                             }
-                            
                         }
                         
                         progreso.setValue(90);
@@ -223,6 +225,7 @@ public class downloadUpdate extends Thread
                 JOptionPane.showMessageDialog(null,"Error : "+e);
             }
         }
+        System.exit(0);
     }
     
     public void getZipFiles(String zipFile, String destFolder) throws IOException
