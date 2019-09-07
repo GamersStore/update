@@ -60,7 +60,7 @@ public class downloadUpdate extends Thread
                 //Descarga de archivo
                 try
                 {
-                    if(makeCarpeta(Config.getFolderDownloadUpdate()))
+                    if(makeCarpeta(Config.getDirUpdate()))
                     {
                         URL url = new URL (update);
 
@@ -70,7 +70,7 @@ public class downloadUpdate extends Thread
                         String nombre = update.substring((update.lastIndexOf("/")) + 1);
 
                         InputStream is = urlCon.getInputStream();
-                        FileOutputStream fos = new FileOutputStream(Config.getFolderDownloadUpdate()+nombre);
+                        FileOutputStream fos = new FileOutputStream(Config.getDirUpdate()+nombre);
 
                         int tamArreglo = 1000;
                         byte[] array = new byte[tamArreglo];
@@ -91,7 +91,6 @@ public class downloadUpdate extends Thread
 
                         System.out.println("Update descargada");
                         
-                        //Borrar archivos actuales
                         if(!getActivo(1750))
                         {
                             JOptionPane.showMessageDialog(null,"La aplicacion se esta ejecutando por lo que es imposible actualizar, cierra la aplicacion y vuelve a intentarlo.");
@@ -100,118 +99,27 @@ public class downloadUpdate extends Thread
                         else
                         {
                             progreso.setValue(85);
-                            
-                            //Copiar la base de datos a backup
-                            File origin = new File("C:\\Program Files (x86)\\GamersStore\\GamersStore.s3db");
-                            File destination = new File(Config.getFolderDownloadUpdate()+"GamersStore.s3db");
-                            
-                            System.out.println("Backup base de datos");
-                            if (origin.exists())
-                            {
-                                try
-                                {
-                                    InputStream in = new FileInputStream(origin);
-                                    OutputStream out = new FileOutputStream(destination);
-                                    
-                                    byte[] buf = new byte[1024];
-                                    int len;
-                                    while ((len = in.read(buf)) > 0)
-                                    {
-                                        out.write(buf, 0, len);
-                                    }
-                                    in.close();
-                                    out.close();
-                                    
-                                    System.out.println("Borrando db origen");
-                                    origin.delete();
-                                }
-                                catch (IOException ioe)
-                                {
-                                    JOptionPane.showMessageDialog(null,"Error al copiar los archivo.\nIntanlo nuevamente ejecutando el programa con permisos de administrador.");
-                                    System.exit(0);
-                                }
-                            }
-                            else
-                            {
-                                JOptionPane.showMessageDialog(null,"Error al copiar los archivo.\nIntanlo nuevamente ejecutando el programa con permisos de administrador.");
-                                System.exit(0);
-                            }
-                            
-                            System.out.println("Borrando archivos");
-                            
-                            if(false)
-                            {
-                                File carpeta = new File("C:\\Program Files (x86)\\GamersStore");
-                                File[] archivos = carpeta.listFiles();
-
-                                for (int i=0; i< archivos.length; i++)
-                                {
-                                    File archivo = archivos[i];
-                                    if(archivo.isDirectory())
-                                    {
-                                        if(!archivo.getName().equals("lib"))
-                                        {
-                                            archivo.delete();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        archivo.delete();
-                                    }
-                                }
-                            }
                         }
                         
                         progreso.setValue(90);
                         
                         //Descomprimir update
-                        getZipFiles(Config.getFolderDownloadUpdate()+nombre,"C:\\Program Files (x86)\\GamersStore\\");
+                        getZipFiles(Config.getDirUpdate()+nombre,Config.getDirInstall());
                         
                         //Borrando la update descargada en zip
-                        File archivoUpdate = new File(Config.getFolderDownloadUpdate()+nombre);
+                        File archivoUpdate = new File(Config.getDirUpdate()+nombre);
                         archivoUpdate.delete();
-                        
-                        //Restaurar backup de base de datos
-                        File origin = new File(Config.getFolderDownloadUpdate()+"GamersStore.s3db");
-                        File destination = new File("C:\\Program Files (x86)\\GamersStore\\GamersStore.s3db");
-
-                        if (origin.exists())
-                        {
-                            try
-                            {
-                                InputStream in = new FileInputStream(origin);
-                                OutputStream out = new FileOutputStream(destination);
-
-                                byte[] buf = new byte[1024];
-                                int len;
-                                while ((len = in.read(buf)) > 0)
-                                {
-                                    out.write(buf, 0, len);
-                                }
-                                in.close();
-                                out.close();
-
-                                System.out.println("Borrando db backup");
-                                origin.delete();
-                            }
-                            catch (IOException ioe)
-                            {
-                                JOptionPane.showMessageDialog(null,"Error al copiar los archivo.\nSe intentara ejecutar como administrador.");
-                                ejecutarAsAdm("C:\\ProgramData\\GamersStore\\update.exe");
-                                System.exit(0);
-                            }
-                        }
                         
                         progreso.setValue(100);
                         
-                        ejecutarAsAdm("C:\\Program Files (x86)\\GamersStore\\GamersStore.exe");
+                        ejecutarAsAdm(Config.getDirInstall()+"GamersStore.exe");
                         
                         System.exit(0);
                     }
                     else
                     {
                         JOptionPane.showMessageDialog(null,"Ocurrio un error al tratar de descargar la actualizacion, El sistema intentara ejecutarse como administrador.");
-                        ejecutarAsAdm("C:\\ProgramData\\GamersStore\\update.exe");
+                        ejecutarAsAdm(Config.getDirUpdate()+"update.exe");
                         System.exit(0);
                     }
                 }

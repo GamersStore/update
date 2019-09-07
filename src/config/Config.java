@@ -15,11 +15,17 @@ public class Config
         return instanciaInit;
     }
     
-    public static String folderDownloadUpdate = "C:\\ProgramData\\GamersStore\\";
+    public static String dirUpdate = "C:\\ProgramData\\GamersStore\\";
+    public static String dirInstall = "C:\\Program Files\\GamersStore\\";
     
-    public static String getFolderDownloadUpdate()
+    public static String getDirUpdate()
     {
-        return folderDownloadUpdate;
+        return dirUpdate;
+    }
+    
+    public static String getDirInstall()
+    {
+        return dirInstall;
     }
     
     public static void setIcon(JFrame frame)
