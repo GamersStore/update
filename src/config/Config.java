@@ -17,6 +17,7 @@ public class Config
     
     public static String dirUpdate = "C:\\ProgramData\\GamersStore\\";
     public static String dirInstall = "C:\\Program Files\\GamersStore\\";
+    public static String urlApi = "https://gamersstore.xyz/api/desktop/";
     
     public static String getDirUpdate()
     {
@@ -26,6 +27,11 @@ public class Config
     public static String getDirInstall()
     {
         return dirInstall;
+    }
+    
+    public static String getUrlApi()
+    {
+        return urlApi;
     }
     
     public static void setIcon(JFrame frame)

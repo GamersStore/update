@@ -1,10 +1,11 @@
 package clases;
 
-import BaseDeDatos.sqlServer;
 import config.Config;
 import static funciones.funciones.ejecutarAsAdm;
 import static funciones.funciones.getActivo;
 import static funciones.funciones.makeCarpeta;
+import static funciones.funciones.verificarInternet;
+import funciones.httpRequest;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.PreparedStatement;
@@ -34,8 +34,7 @@ public class downloadUpdate extends Thread
     
     public void run()
     {
-        sqlServer con = new sqlServer();
-        if(con.conectar() == null)
+        if(!verificarInternet())
         {
             JOptionPane.showMessageDialog(null,"La instalacion fallo debido a que no se pudo establecer conexion con el servidor.");
         }
@@ -43,19 +42,9 @@ public class downloadUpdate extends Thread
         {
             try
             {
-                
-                String update = "";
-
                 //get URL update
-                PreparedStatement  select = con.conectar().prepareStatement
-                (
-                    "SELECT Informacion FROM gamersstore WHERE Id = 8"
-                );
-                ResultSet result = select.executeQuery();
-                while (result.next())
-                {
-                    update = (String)result.getObject("Informacion");
-                }
+                httpRequest request = new httpRequest();
+                String update = request.execute("getUpdate.php").getString("Update");
 
                 //Descarga de archivo
                 try
